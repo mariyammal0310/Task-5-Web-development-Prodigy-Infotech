@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather App</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #3498db, #2c3e50);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    #weather-container {
+      text-align: center;
+      padding: 20px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    #weather-icon {
+      width: 100px;
+      height: 100px;
+    }
+
+    #input-container {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    #locationInput {
+      padding: 10px;
+      font-size: 1em;
+      border: none;
+      border-radius: 5px;
+    }
+
+    #getWeatherBtn {
+      background: #34495e;
+      color: #fff;
+      padding: 10px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    #getWeatherBtn:hover {
+      background: #2c3e50;
+    }
+  </style>
+</head>
+<body>
+
+<div id="weather-container">
+  <h1>Weather App</h1>
+  <p>Find the current weather conditions for your location.</p>
+  <img id="weather-icon" src="C:/Users/Admin/Desktop/weather app icon.png" alt="Weather Icon">
+  <p id="weather-description"></p>
+  <p id="temperature"></p>
+
+  <div id="input-container">
+    <input type="text" id="locationInput" placeholder="Enter location">
+    <button id="getWeatherBtn" onclick="getWeather()">Get Weather</button>
+  </div>
+</div>
+
+<script>
+  function getWeather() {
+    const locationInput = document.getElementById('locationInput');
+    const location = locationInput.value.trim();
+
+    if (location === '') {
+      alert('Please enter a location.');
+      return;
+    }
+
+    // Use your provided API key here
+    const apiKey = '5cfaad5160b50c4463ed951c604b9f5a';
+    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}&units=metric`;
+
+    fetch(apiUrl)
+      .then(response => response.json())
+      .then(data => {
+        if (data.cod === '404') {
+          alert('Location not found. Please enter a valid location.');
+          return;
+        }
+
+        displayWeather(data);
+      })
+      .catch(error => {
+        console.error('Error fetching weather data:', error);
+        alert('Error fetching weather data. Please try again.');
+      });
+  }
+
+  function displayWeather(data) {
+    const weatherIcon = document.getElementById('weather-icon');
+    const weatherDescription = document.getElementById('weather-description');
+    const temperature = document.getElementById('temperature');
+
+    const iconCode = data.weather[0].icon;
+    const iconUrl = `C:/Users/Admin/Desktop/weather app icon.png`;
+
+    weatherIcon.src = iconUrl;
+    weatherDescription.textContent = data.weather[0].description;
+    temperature.textContent = `${Math.round(data.main.temp)}°C`;
+  }
+</script>
+
+</body>
+</html>
